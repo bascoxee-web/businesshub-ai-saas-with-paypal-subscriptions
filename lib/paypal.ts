@@ -1,0 +1,4 @@
+import 'server-only'
+const base=process.env.PAYPAL_ENV==='live'?'https://api-m.paypal.com':'https://api-m.sandbox.paypal.com'
+async function token(){const auth=Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`).toString('base64');const r=await fetch(`${base}/v1/oauth2/token`,{method:'POST',headers:{Authorization:`Basic ${auth}`,'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=client_credentials',cache:'no-store'});if(!r.ok)throw new Error('PayPal authentication failed');return (await r.json()).access_token}
+export async function paypal(path:string,init:RequestInit={}){const access=await token();return fetch(`${base}${path}`,{...init,headers:{Authorization:`Bearer ${access}`,'Content-Type':'application/json',...(init.headers||{})},cache:'no-store'})}
