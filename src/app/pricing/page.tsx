@@ -1,0 +1,1 @@
+import Link from "next/link"; export default function Page(){return <main className="auth"><div className="card"><h1>Start free</h1><p>Paid subscriptions are not available for purchase yet. Sandbox testing does not activate paid access.</p><Link className="btn" href="/signup">Create account</Link></div></main>;}

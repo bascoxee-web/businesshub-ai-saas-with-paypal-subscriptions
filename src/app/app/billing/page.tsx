@@ -1,0 +1,8 @@
+import {requireWorkspace} from '@/lib/auth';
+import {Banner} from '@/components/Banner';
+import {subscriptionPlans,subscriptionsEnabled} from '@/lib/subscriptions';
+import {startSubscription,subscriptionAction} from './actions';
+export default async function Billing({searchParams}:{searchParams:Promise<{error?:string;notice?:string}>}){
+ const {ws}=await requireWorkspace();const sp=await searchParams;const plans=subscriptionPlans();const ready=subscriptionsEnabled();
+ return <><h1>Plan &amp; billing</h1><Banner error={sp.error} notice={sp.notice}/><div className="card"><h2>Current plan: {ws.plan}</h2><p>BusinessHub VisionAI is in private pilot. Public pricing has not been finalized.</p></div><div className="card"><h2>PayPal sandbox testing</h2><p>Use PayPal sandbox test accounts only. No real subscription charges are enabled. Sandbox approval does not upgrade your production plan.</p><p>Test prices and billing terms are displayed by PayPal before approval.</p>{!ready && <p role="status">Sandbox credentials and plan setup are pending.</p>}<form action={startSubscription}><label htmlFor="plan">Sandbox plan</label><select id="plan" name="plan" required defaultValue=""><option value="" disabled>Select a test plan</option>{Object.keys(plans).map(p=><option key={p} value={p}>{p}</option>)}</select><button className="btn" disabled={!ready || !Object.keys(plans).length} type="submit">Continue to PayPal sandbox</button></form><form action={subscriptionAction}><button className="btn ghost" name="action" value="refresh" disabled={!ready}>Refresh status</button> <button className="btn danger" name="action" value="cancel" disabled={!ready}>Cancel sandbox subscription</button></form></div></>;
+}
