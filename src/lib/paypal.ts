@@ -78,6 +78,7 @@ export class PayPalClient {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: "grant_type=client_credentials",
+      signal: AbortSignal.timeout(20000),
     });
     if (!res.ok) throw new Error(`PayPal sign-in failed (${res.status})`);
     const json = (await res.json()) as { access_token: string; expires_in: number };
@@ -89,6 +90,7 @@ export class PayPalClient {
     const token = await this.accessToken();
     const res = await this.doFetch(`${this.cfg.base}${path}`, {
       method: init.method,
+      signal: AbortSignal.timeout(20000),
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -167,6 +169,18 @@ export class PayPalClient {
     if(!r.ok || !r.json.id)throw new Error('Could not start the subscription.');
     const details=await this.getSubscription(String(r.json.id));
     return {...details,links:details.links ?? r.json.links};
+  }
+  async getPlan(id:string) {
+    const r=await this.call(`/v1/billing/plans/${encodeURIComponent(id)}`,{method:'GET'});
+    if(!r.ok)throw new Error('Could not verify PayPal plan terms.');
+    return r.json;
+  }
+  async subscriptionTransactions(id:string, now=new Date()) {
+    const start=new Date(now.valueOf()-40*86400000);
+    const query=new URLSearchParams({start_time:start.toISOString(),end_time:now.toISOString()});
+    const r=await this.call(`/v1/billing/subscriptions/${encodeURIComponent(id)}/transactions?${query}`,{method:'GET'});
+    if(!r.ok)throw new Error('Could not verify subscription payments.');
+    return r.json;
   }
   async getSubscription(id:string) {
     const r=await this.call(`/v1/billing/subscriptions/${encodeURIComponent(id)}`,{method:'GET'});

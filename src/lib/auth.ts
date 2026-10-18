@@ -13,7 +13,8 @@ export async function getWorkspaceOrNull() {
   // Row-level security means this only ever returns workspaces the user belongs to.
   const { data: ws } = await supabase.from("workspaces").select("id, name, plan, currency").limit(1).maybeSingle();
   if (!ws) return null;
-  return { supabase, user, ws: ws as Workspace };
+  const { data: plan } = await supabase.rpc("effective_billing_plan", { p_workspace: ws.id });
+  return { supabase, user, ws: { ...ws, plan: typeof plan === "string" ? plan : "free" } as Workspace };
 }
 
 /** Signed-in user plus their workspace. Anyone else is sent to the login page. */
