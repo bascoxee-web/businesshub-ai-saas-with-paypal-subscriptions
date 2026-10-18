@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
 type Msg = { role: "user" | "assistant"; content: string };
@@ -14,6 +15,7 @@ const SUGGESTIONS = [
 ];
 
 export function AssistantChat({ initialCards }: { initialCards: { id: string; kind: string; summary: string }[] }) {
+  const router = useRouter();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [cards, setCards] = useState<Card[]>(initialCards.map((c) => ({ ...c, state: "pending" as const })));
   const [input, setInput] = useState("");
@@ -46,6 +48,7 @@ export function AssistantChat({ initialCards }: { initialCards: { id: string; ki
     } catch {
       setError("Couldn't reach the server. Check your connection and try again.");
     } finally {
+      router.refresh();
       setBusy(false);
       setTimeout(() => endRef.current?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" }), 50);
     }
