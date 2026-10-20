@@ -5,7 +5,7 @@
   --card: #0d1b34;
   --line: #293c59;
   --accent: #3978f6;
-  --accent-ink: #0d1b34;
+  --accent-ink: #ffffff;
   --ok: #83dbac;
   --warn: #f4ce7c;
   --bad: #ffaaa6;
@@ -123,8 +123,18 @@ textarea { min-height: 84px; resize: vertical; }
 :focus-visible { outline: 3px solid #1464b4; outline-offset: 3px; }
 .main, .card, .col, .items .line > * { min-width: 0; }
 .msg, td, .proposal { overflow-wrap: anywhere; }
-.skip-link { position: fixed; top: -100px; left: 12px; z-index: 100; padding: 10px; background: white; color: #edf3ff; }
+.skip-link { position: fixed; top: -100px; left: 12px; z-index: 100; padding: 10px; background: white; color: #071225; }
 .skip-link:focus { top: 12px; }
+.eyebrow { color: #a8c7ff; font-size: 12px; font-weight: 700; letter-spacing: .12em; }
+.price { font-size: 32px; font-weight: 700; margin: 12px 0; }
+.price span { font-size: 14px; font-weight: 400; color: var(--ink-soft); }
+.marketing-page { max-width: 1100px; margin: auto; padding: 32px 20px 60px; }
+.marketing-hero { padding: 64px 0 32px; max-width: 760px; }
+.marketing-hero h1 { font-size: clamp(32px, 6vw, 56px); line-height: 1.1; }
+.feature-list { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 10px 30px; padding-left: 20px; }
+.addon-feature { border-color: #497fce; padding: clamp(18px, 4vw, 32px); }
+.subscription-row { padding: 18px 0; border-bottom: 1px solid var(--line); }
+.table-scroll { overflow-x: auto; }
 @media (max-width: 560px) {
   .items .line { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 40px; }
   .items .line > :first-child { grid-column: 1 / -1; }

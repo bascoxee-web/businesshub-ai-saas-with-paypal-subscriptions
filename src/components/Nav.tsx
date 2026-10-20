@@ -8,6 +8,8 @@ const links = [
   { href: "/app/invoices", label: "Invoices" },
   { href: "/app/seo", label: "SEO Grader" },
   { href: "/app/assistant", label: "AI Assistant" },
+  { href: "/app/tools", label: "My custom tools" },
+  { href: "/app/addons", label: "Add-ons" },
   { href: "/app/billing", label: "Plan & billing" },
 ];
 

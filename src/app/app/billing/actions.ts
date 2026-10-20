@@ -6,12 +6,16 @@ import {livePayPal} from '@/lib/paypal-live';
 import {siteUrl} from '@/lib/site';
 import {billingPlan,billingOffers,billingMode,billingApproval,validateMonthlyPlan} from '@/lib/billing';
 import {reconcileBilling} from '@/lib/billing-live';
+import {hubPlans,builderOffer} from '@/lib/catalog';
+import {z} from 'zod';
 
 export async function startSubscription(form:FormData){
  const {supabase,ws}=await requireWorkspace();
  const mode=billingMode();if(!mode)failTo('/app/billing','Payment setup and verification are still pending.');
  const plan=billingPlan.safeParse(form.get('plan'));if(!plan.success)failTo('/app/billing','Select a valid plan.');
  const offer=billingOffers().find(p=>p.plan===plan.data);if(!offer)failTo('/app/billing','This plan is unavailable.');
+ const product=hubPlans.find(p=>p.id===offer.plan) ?? (offer.plan==='ai_builder'?builderOffer:null);
+ if(!product||offer.currency!=='USD'||offer.cents!==product.cents)failTo('/app/billing','This offer is not configured at its published price.');
  if(form.get('consent')!=='yes')failTo('/app/billing','Confirm the recurring monthly terms before continuing.');
  let url:string;
  try{
@@ -36,7 +40,9 @@ export async function subscriptionAction(form:FormData){
  const mode=process.env.PAYPAL_ENV;if(!['live','sandbox'].includes(mode??''))failTo('/app/billing','Payment management is unavailable.');
  const {data:member}=await supabase.from('workspace_members').select('role').eq('workspace_id',ws.id).eq('user_id',user.id).maybeSingle();
  if(member?.role!=='owner')failTo('/app/billing','Only the workspace owner can manage subscriptions.');
- const {data:row}=await supabase.from('billing_subscriptions').select('*').eq('workspace_id',ws.id).eq('environment',mode).order('created_at',{ascending:false}).limit(1).maybeSingle();
+ const id=z.uuid().safeParse(form.get('subscription_id'));
+ if(!id.success)failTo('/app/billing','Choose the subscription to manage.');
+ const {data:row}=await supabase.from('billing_subscriptions').select('*').eq('id',id.data).eq('workspace_id',ws.id).eq('environment',mode).maybeSingle();
  if(!row?.provider_id)failTo('/app/billing','No subscription has been linked yet.');
  let notice:string;
  try{

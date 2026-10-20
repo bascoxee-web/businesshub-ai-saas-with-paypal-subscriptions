@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { decimalToCents } from './paypal';
 
-export const billingPlan = z.enum(['starter', 'growth', 'business']);
+export const billingPlan = z.enum(['starter', 'growth', 'business', 'ai_builder']);
 export type BillingPlan = z.infer<typeof billingPlan>;
 export type Offer = { plan: BillingPlan; providerPlan: string; cents: number; currency: string };
 export function billingOffers(env: Record<string, string | undefined> = process.env): Offer[] {
