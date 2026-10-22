@@ -12,7 +12,7 @@ export default async function NewClientPage({ searchParams }: { searchParams: Pr
     <>
       <h1>New client</h1>
       <Banner error={sp.error} />
-      <div className="card" style={{ maxWidth: 620 }}>
+      <div className="card u-max-width-620px" >
         <ClientForm action={createClientAction} submitLabel="Save client" />
       </div>
     </>

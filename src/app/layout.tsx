@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import {allowIndexing} from "@/lib/release";
+import {existsSync} from "node:fs";
+import path from "node:path";
 
-export const metadata: Metadata = {
+export const dynamic = "force-dynamic";
+export function generateMetadata(): Metadata { return {
+  robots: { index: allowIndexing(), follow: allowIndexing() },
+  icons: { icon: existsSync(path.join(process.cwd(),"public","retch-visionai-icon.png")) ? "/retch-visionai-icon.png" : "/icon.svg" },
   title: { default: "BusinessHub VisionAI", template: "%s · BusinessHub VisionAI" },
   description: "Clients, projects, invoices and an AI assistant in one place.",
-};
+}; }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

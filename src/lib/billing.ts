@@ -1,15 +1,15 @@
 import { z } from 'zod';
 import { decimalToCents } from './paypal';
 
-export const billingPlan = z.enum(['starter', 'growth', 'business', 'ai_builder']);
+export const billingPlan = z.enum(['starter', 'growth', 'business', 'pro', 'agency', 'ai_builder']);
 export type BillingPlan = z.infer<typeof billingPlan>;
 export type Offer = { plan: BillingPlan; providerPlan: string; cents: number; currency: string };
 export function billingOffers(env: Record<string, string | undefined> = process.env): Offer[] {
   return billingPlan.options.flatMap(plan => {
     const prefix = `PAYPAL_${plan.toUpperCase()}`;
     const providerPlan = env[`PAYPAL_PLAN_${plan.toUpperCase()}`] ?? '';
-    const amount = env[`${prefix}_MONTHLY_CENTS`] ?? '';
-    const currency = env.PAYPAL_BILLING_CURRENCY ?? '';
+    const amount = env[`${prefix}_MONTHLY_CENTS`] ?? (plan === 'pro' ? '3500' : plan === 'agency' ? '7900' : '');
+    const currency = env.PAYPAL_BILLING_CURRENCY ?? (['pro','agency'].includes(plan) ? 'USD' : '');
     if (!/^P-[A-Z0-9]{24}$/.test(providerPlan) || !/^[1-9]\d{0,7}$/.test(amount) || !['USD', 'PHP'].includes(currency)) return [];
     return [{ plan, providerPlan, cents: Number(amount), currency }];
   });

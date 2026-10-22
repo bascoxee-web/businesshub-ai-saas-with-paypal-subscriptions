@@ -35,7 +35,7 @@ export function LineItemsEditor({ currency }: { currency: string }) {
           <button type="button" className="btn ghost small" onClick={() => remove(l.key)} disabled={lines.length === 1} aria-label={`Remove line ${i + 1}`}>×</button>
         </div>
       ))}
-      <div className="row between" style={{ marginTop: 8 }}>
+      <div className="row between u-margin-top-8px" >
         <button type="button" className="btn ghost small" onClick={add} disabled={lines.length >= 50}>+ Add line</button>
         <div><span className="muted">Total </span><strong>{formatMoney(total, currency)}</strong></div>
       </div>

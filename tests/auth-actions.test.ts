@@ -1,0 +1,13 @@
+import {it,expect,vi,beforeEach} from 'vitest';
+const auth=vi.hoisted(()=>({signInWithPassword:vi.fn(),signUp:vi.fn(),signOut:vi.fn()}));
+vi.mock('../src/lib/supabase/server',()=>({createClient:async()=>({auth})}));
+vi.mock('next/navigation',()=>({redirect:(url:string)=>{throw new Error('redirect:'+url)}}));
+vi.mock('../src/lib/site',()=>({siteUrl:async()=>'https://hub.example.com'}));
+import {login,signup,logout} from '../src/lib/auth-actions';
+beforeEach(()=>vi.clearAllMocks());
+const form=(data:Record<string,string>)=>{const f=new FormData();for(const [k,v]of Object.entries(data))f.set(k,v);return f};
+it('logs in with normalized email and preserves password',async()=>{auth.signInWithPassword.mockResolvedValue({error:null});await expect(login(form({email:' Owner@Example.com ',password:' secret '}))).rejects.toThrow('redirect:/app');expect(auth.signInWithPassword).toHaveBeenCalledWith({email:'owner@example.com',password:' secret '});});
+it('rejects bad login without exposing account existence',async()=>{auth.signInWithPassword.mockResolvedValue({error:{message:'bad'}});await expect(login(form({email:'owner@example.com',password:'wrong'}))).rejects.toThrow('Email%20or%20password%20is%20incorrect');});
+it('signs up with workspace name and confirmation redirect',async()=>{auth.signUp.mockResolvedValue({data:{session:null},error:null});await expect(signup(form({email:'owner@example.com',password:'test-password',workspace_name:'My company'}))).rejects.toThrow('Check%20your%20email');expect(auth.signUp.mock.calls[0][0].options).toEqual({data:{workspace_name:'My company'},emailRedirectTo:'https://hub.example.com/auth/callback'});});
+it('rejects short passwords before making a provider call',async()=>{await expect(signup(form({email:'owner@example.com',password:'short',workspace_name:'My company'}))).rejects.toThrow('/signup');expect(auth.signUp).not.toHaveBeenCalled();});
+it('signs out',async()=>{await expect(logout()).rejects.toThrow('redirect:/login');expect(auth.signOut).toHaveBeenCalledOnce();});

@@ -8,9 +8,11 @@ import {billingPlan,billingOffers,billingMode,billingApproval,validateMonthlyPla
 import {reconcileBilling} from '@/lib/billing-live';
 import {hubPlans,builderOffer} from '@/lib/catalog';
 import {z} from 'zod';
+import {paidPlansEnabled} from '@/lib/release';
 
 export async function startSubscription(form:FormData){
  const {supabase,ws}=await requireWorkspace();
+ if(!paidPlansEnabled())failTo('/app/billing','Paid subscriptions are not available yet.');
  const mode=billingMode();if(!mode)failTo('/app/billing','Payment setup and verification are still pending.');
  const plan=billingPlan.safeParse(form.get('plan'));if(!plan.success)failTo('/app/billing','Select a valid plan.');
  const offer=billingOffers().find(p=>p.plan===plan.data);if(!offer)failTo('/app/billing','This plan is unavailable.');

@@ -2,6 +2,8 @@
 // PLACEHOLDER NUMBERS: set these to match the limits on your pricing page before launch.
 export const PLAN_LIMITS = {
   free: { aiMessages: 20 },
+  pro: { aiMessages: 300 },
+  agency: { aiMessages: 6000 },
   starter: { aiMessages: 300 },
   growth: { aiMessages: 1500 },
   business: { aiMessages: 6000 },

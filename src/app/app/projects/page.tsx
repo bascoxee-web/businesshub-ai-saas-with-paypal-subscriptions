@@ -24,19 +24,19 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
       <Banner error={sp.error} notice={sp.notice} />
       <div className="card">
         <h2>New project</h2>
-        <form action={createProjectAction} className="row" style={{ alignItems: "flex-end" }}>
-          <div style={{ flex: 2, minWidth: 200 }}>
+        <form action={createProjectAction} className="row u-align-items-flex-end" >
+          <div className="u-flex-2-min-width-200px">
             <label htmlFor="name">Name</label>
             <input id="name" name="name" required maxLength={120} />
           </div>
-          <div style={{ flex: 1, minWidth: 160 }}>
+          <div className="u-flex-1-min-width-160px">
             <label htmlFor="client_id">Client</label>
             <select id="client_id" name="client_id" defaultValue="">
               <option value="">No client</option>
               {(clients ?? []).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </div>
-          <div style={{ minWidth: 150 }}>
+          <div className="u-min-width-150px">
             <label htmlFor="due_date">Due date</label>
             <input id="due_date" name="due_date" type="date" />
           </div>

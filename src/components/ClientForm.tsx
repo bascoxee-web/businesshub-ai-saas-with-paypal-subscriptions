@@ -11,17 +11,17 @@ export function ClientForm({ action, client, submitLabel }: { action: (fd: FormD
         <label htmlFor="company">Company</label>
         <input id="company" name="company" defaultValue={client?.company ?? ""} maxLength={120} />
       </div>
-      <div className="row" style={{ alignItems: "flex-start" }}>
-        <div className="field" style={{ flex: 1, minWidth: 200 }}>
+      <div className="row u-align-items-flex-start" >
+        <div className="field u-flex-1-min-width-200px" >
           <label htmlFor="email">Email</label>
           <input id="email" name="email" type="email" defaultValue={client?.email ?? ""} maxLength={200} />
         </div>
-        <div className="field" style={{ flex: 1, minWidth: 200 }}>
+        <div className="field u-flex-1-min-width-200px" >
           <label htmlFor="phone">Phone</label>
           <input id="phone" name="phone" defaultValue={client?.phone ?? ""} maxLength={50} />
         </div>
       </div>
-      <div className="field" style={{ maxWidth: 200 }}>
+      <div className="field u-max-width-200px" >
         <label htmlFor="status">Status</label>
         <select id="status" name="status" defaultValue={client?.status ?? "lead"}>
           <option value="lead">Lead</option>

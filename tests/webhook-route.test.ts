@@ -1,0 +1,11 @@
+import {it,expect,vi,beforeEach} from 'vitest';
+const deps=vi.hoisted(()=>({verify:vi.fn(),process:vi.fn(),settle:vi.fn()}));
+vi.mock('../src/lib/paypal-live',()=>({livePayPal:()=>({verifyWebhook:deps.verify}),liveSettleDeps:()=>({})}));
+vi.mock('../src/lib/billing-live',()=>({processBillingEvent:deps.process}));
+vi.mock('../src/lib/payments',()=>({settleOrder:deps.settle}));
+import {POST} from '../src/app/api/paypal/webhook/route';
+beforeEach(()=>{vi.clearAllMocks();process.env.PAYPAL_ENV='sandbox';});
+const req=(type:string)=>new Request('https://hub.test/api/paypal/webhook',{method:'POST',body:JSON.stringify({id:'WH-1',event_type:type,resource:{id:'I-SUB'}})});
+it('rejects unverified signatures without touching subscription data',async()=>{deps.verify.mockResolvedValue(false);expect((await POST(req('BILLING.SUBSCRIPTION.ACTIVATED'))).status).toBe(400);expect(deps.process).not.toHaveBeenCalled();});
+it('retries provider verification outages without granting access',async()=>{deps.verify.mockRejectedValue(new Error('offline'));expect((await POST(req('BILLING.SUBSCRIPTION.ACTIVATED'))).status).toBe(503);expect(deps.process).not.toHaveBeenCalled();});
+it.each(['ACTIVATED','CANCELLED','SUSPENDED','EXPIRED','PAYMENT.FAILED'])('dispatches verified subscription %s to the existing reconciliation flow',async(type)=>{deps.verify.mockResolvedValue(true);deps.process.mockResolvedValue(true);expect((await POST(req('BILLING.SUBSCRIPTION.'+type))).status).toBe(200);expect(deps.process).toHaveBeenCalledOnce();expect(deps.settle).not.toHaveBeenCalled();});

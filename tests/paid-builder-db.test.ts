@@ -5,7 +5,7 @@ let db:PGlite,a:string,b:string,ws:string,tool:string;
 async function as(user:string,sql:string,args:unknown[]=[]){await db.exec(`set role authenticated;select set_config('request.jwt.claim.sub','${user}',false)`);try{return await db.query<any>(sql,args)}finally{await db.exec('reset role')}}
 beforeAll(async()=>{
  db=new PGlite();await db.exec(`create role anon nologin;create role authenticated nologin;create role service_role nologin bypassrls;create schema auth;create table auth.users(id uuid primary key default gen_random_uuid());create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema auth to anon,authenticated,service_role;`);
- for(const f of ['businesshub-shared-project','billing-lifecycle','paid-builder'])await db.exec(readFileSync('database/proposals/'+f+'.sql','utf8'));
+ for(const f of ['businesshub-shared-project','billing-lifecycle','paid-builder','pro-agency'])await db.exec(readFileSync('database/proposals/'+f+'.sql','utf8'));
  a=(await db.query<any>('insert into auth.users default values returning id')).rows[0].id;b=(await db.query<any>('insert into auth.users default values returning id')).rows[0].id;
  ws=(await as(a,"select businesshub.initialize_workspace('Owner test') as id")).rows[0].id;
  tool=(await db.query<any>("insert into businesshub.custom_tools(workspace_id,definition) values($1,'{}') returning id",[ws])).rows[0].id;
@@ -45,4 +45,18 @@ it('never unlocks from sandbox or stale verification',async()=>{
  expect((await as(a,'select businesshub.has_builder($1) as ok',[ws])).rows[0].ok).toBe(false);
  await db.query("update businesshub.billing_subscriptions set environment='live',verified_at=now()-interval '49 hours' where plan='ai_builder'");
  expect((await as(a,'select businesshub.has_builder($1) as ok',[ws])).rows[0].ok).toBe(false);
+});
+
+it('supports new tiers and preserves prepaid access after suspension until expiry',async()=>{
+ await db.query("delete from businesshub.billing_subscriptions");
+ for(const tier of ['pro','agency']){
+  const row=(await db.query<any>("insert into businesshub.billing_subscriptions(workspace_id,plan,environment,status,paid_until,verified_at) values($1,$2,'live','ACTIVE',now()+interval '1 day',now()) returning id",[ws,tier])).rows[0];
+  for(const status of ['ACTIVE','CANCELLED','SUSPENDED','EXPIRED']){
+   await db.query('update businesshub.billing_subscriptions set status=$1 where id=$2',[status,row.id]);
+   expect((await as(a,'select businesshub.effective_billing_plan($1) as p',[ws])).rows[0].p).toBe(tier);
+  }
+  await db.query("update businesshub.billing_subscriptions set paid_until=now()-interval '1 second' where id=$1",[row.id]);
+  expect((await as(a,'select businesshub.effective_billing_plan($1) as p',[ws])).rows[0].p).toBe('free');
+  await db.query('delete from businesshub.billing_subscriptions where id=$1',[row.id]);
+ }
 });

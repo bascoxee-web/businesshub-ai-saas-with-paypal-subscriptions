@@ -52,23 +52,23 @@ export default async function PublicInvoicePage({
         <Banner error={sp.error} notice={sp.paid === "1" ? "Payment received. Thank you!" : sp.notice} />
       </div>
       <div className="card">
-        <div className="row between" style={{ alignItems: "flex-start" }}>
+        <div className="row between u-align-items-flex-start" >
           <div>
-            <h1 style={{ marginBottom: 2 }}>{inv.business_name}</h1>
+            <h1 className="u-margin-bottom-2px">{inv.business_name}</h1>
             <div className="muted">Invoice {formatInvoiceNumber(inv.number)}</div>
           </div>
           <span className={`pill ${inv.status === "paid" ? "ok" : "warn"}`}>{inv.status === "paid" ? "Paid" : "Payment due"}</span>
         </div>
 
-        <div className="row between" style={{ margin: "22px 0", alignItems: "flex-start" }}>
+        <div className="row between u-margin-22px-0-align-items-flex-start" >
           <div>
             <div className="muted small">Bill to</div>
             <strong>{inv.client_name}</strong>
             {inv.client_company ? <div>{inv.client_company}</div> : null}
           </div>
-          <div style={{ textAlign: "right" }}>
+          <div className="u-text-align-right">
             <div className="muted small">Issued</div><div>{inv.issue_date}</div>
-            <div className="muted small" style={{ marginTop: 6 }}>Due</div><div>{inv.due_date ?? "On receipt"}</div>
+            <div className="muted small u-margin-top-6px" >Due</div><div>{inv.due_date ?? "On receipt"}</div>
           </div>
         </div>
 
@@ -90,8 +90,8 @@ export default async function PublicInvoicePage({
           </tbody>
         </table>
 
-        {inv.notes ? <p style={{ whiteSpace: "pre-wrap", marginTop: 20 }}>{inv.notes}</p> : null}
-        <div className="no-print row" style={{ marginTop: 24 }}>
+        {inv.notes ? <p className="u-white-space-pre-wrap-margin-top-20px">{inv.notes}</p> : null}
+        <div className="no-print row u-margin-top-24px" >
           {canPay && (
             <form action={startPayPalCheckout.bind(null, token)}>
               <button className="btn" type="submit">Pay {formatMoney(total, inv.currency)} with PayPal</button>

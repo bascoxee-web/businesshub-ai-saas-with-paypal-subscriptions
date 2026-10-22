@@ -1,4 +1,5 @@
 import Link from "next/link";
+import {Brand} from "@/components/Brand";
 import { requireWorkspace } from "@/lib/auth";
 import { invoiceTotals, clientNames } from "@/lib/data";
 import { formatMoney, formatInvoiceNumber } from "@/lib/money";
@@ -31,14 +32,14 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
 
   return (
     <>
-      <h1>Dashboard</h1>
+      <div className="dashboard-heading"><Brand /><div className="row between"><h1>Dashboard</h1><Link className="pill" href="/app/billing">Current plan: {ws.plan}</Link></div></div>
       <Banner error={sp.error} notice={sp.notice} />
-      <div className="grid cols3" style={{ marginBottom: 16 }}>
+      <div className="grid cols3 u-margin-bottom-16px" >
         <div className="card stat"><div className="muted small">Clients</div><div className="n">{clients.count ?? 0}</div></div>
         <div className="card stat"><div className="muted small">Active projects</div><div className="n">{projects.count ?? 0}</div></div>
         <div className="card stat"><div className="muted small">Open tasks</div><div className="n">{openTasks.count ?? 0}</div></div>
         <div className="card stat"><div className="muted small">Outstanding</div><div className="n">{formatMoney(sum(outstanding), ws.currency)}</div></div>
-        <div className="card stat"><div className="muted small">Overdue</div><div className="n" style={{ color: overdue.length ? "var(--bad)" : undefined }}>{formatMoney(sum(overdue), ws.currency)}</div></div>
+        <div className="card stat"><div className="muted small">Overdue</div><div className={overdue.length ? "n text-danger" : "n"}>{formatMoney(sum(overdue), ws.currency)}</div></div>
         <div className="card stat"><div className="muted small">Paid this month</div><div className="n">{formatMoney(sum(paidThisMonth), ws.currency)}</div></div>
       </div>
 

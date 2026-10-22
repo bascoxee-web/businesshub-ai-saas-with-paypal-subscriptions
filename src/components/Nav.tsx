@@ -1,4 +1,5 @@
 import Link from "next/link";
+import {Brand} from "./Brand";
 import { logout } from "@/lib/auth-actions";
 
 const links = [
@@ -16,20 +17,18 @@ const links = [
 export function Nav({ workspaceName, email }: { workspaceName: string; email: string }) {
   return (
     <aside className="side">
-      <div className="brand">
-        BusinessHub<span> VisionAI</span>
-      </div>
+      <Brand />
       {links.map((l) => (
         <Link key={l.href} href={l.href} className="nav">{l.label}</Link>
       ))}
       <div className="spacer" />
       <div className="who">
-        <strong style={{ color: "#fff" }}>{workspaceName}</strong>
+        <strong className="u-color-fff">{workspaceName}</strong>
         <br />
         {email}
       </div>
       <form action={logout}>
-        <button className="btn ghost small" style={{ color: "#cbd8d1", borderColor: "#3b4d46", width: "100%" }}>Sign out</button>
+        <button className="btn ghost small u-color-cbd8d1-border-color-3b4d46-width-100" >Sign out</button>
       </form>
     </aside>
   );

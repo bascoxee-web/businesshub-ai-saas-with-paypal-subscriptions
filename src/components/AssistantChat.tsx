@@ -78,10 +78,10 @@ export function AssistantChat({ initialCards }: { initialCards: { id: string; ki
   const visibleCards = cards.filter((c) => c.state !== "dismissed");
 
   return (
-    <div style={{ maxWidth: 760 }}>
+    <div className="u-max-width-760px">
       {messages.length === 0 && (
         <div className="card">
-          <p className="muted" style={{ marginTop: 0 }}>Ask about your clients, projects and invoices, or tell me what to add. I'll show you a card to confirm before anything is saved.</p>
+          <p className="muted u-margin-top-0" >Ask about your clients, projects and invoices, or tell me what to add. I'll show you a card to confirm before anything is saved.</p>
           <div className="row">
             {SUGGESTIONS.map((s) => (
               <button key={s} className="btn ghost small" type="button" onClick={() => send(s)} disabled={busy}>{s}</button>
@@ -103,30 +103,30 @@ export function AssistantChat({ initialCards }: { initialCards: { id: string; ki
         <div className="card">
           <h2>Waiting for your OK</h2>
           {visibleCards.map((c) => (
-            <div className="proposal" key={c.id} style={{ marginBottom: 10 }}>
+            <div className="proposal u-margin-bottom-10px" key={c.id} >
               <div>{c.summary}</div>
               {c.state === "pending" && (
-                <div className="row" style={{ marginTop: 8 }}>
+                <div className="row u-margin-top-8px" >
                   <button className="btn small" type="button" onClick={() => decide(c.id, "confirm")}>Confirm</button>
                   <button className="btn ghost small" type="button" onClick={() => decide(c.id, "dismiss")}>Dismiss</button>
                 </div>
               )}
-              {c.state === "working" && <div className="muted small" style={{ marginTop: 8 }}>Working…</div>}
+              {c.state === "working" && <div className="muted small u-margin-top-8px" >Working…</div>}
               {c.state === "confirmed" && (
-                <div className="small" style={{ marginTop: 8, color: "var(--ok)" }}>
+                <div className="small u-margin-top-8px-color-var-ok" >
                   Done. {c.href ? <Link href={c.href}>Open it</Link> : null}
                 </div>
               )}
-              {c.state === "error" && <div className="small" style={{ marginTop: 8, color: "var(--bad)" }}>{c.error}</div>}
+              {c.state === "error" && <div className="small u-margin-top-8px-color-var-bad" >{c.error}</div>}
             </div>
           ))}
         </div>
       )}
 
-      <form onSubmit={(e) => { e.preventDefault(); void send(input); }} className="row" style={{ alignItems: "flex-end" }}>
-        <div style={{ flex: 1, minWidth: 240 }}>
+      <form onSubmit={(e) => { e.preventDefault(); void send(input); }} className="row u-align-items-flex-end" >
+        <div className="u-flex-1-min-width-240px">
           <label htmlFor="msg" className="muted small">Message</label>
-          <textarea id="msg" value={input} onChange={(e) => setInput(e.target.value)} maxLength={4000} style={{ minHeight: 56 }}
+          <textarea id="msg" value={input} onChange={(e) => setInput(e.target.value)} maxLength={4000} className="u-min-height-56px"
             onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); void send(input); } }} />
         </div>
         <button className="btn" type="submit" disabled={busy || !input.trim()}>Send</button>

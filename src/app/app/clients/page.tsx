@@ -21,8 +21,8 @@ export default async function ClientsPage({ searchParams }: { searchParams: Prom
         <Link className="btn" href="/app/clients/new">New client</Link>
       </div>
       <Banner error={sp.error} notice={sp.notice} />
-      <form className="row" style={{ marginBottom: 14 }}>
-        <input name="q" defaultValue={sp.q ?? ""} placeholder="Search name, company or email" style={{ maxWidth: 340 }} />
+      <form className="row u-margin-bottom-14px" >
+        <input name="q" defaultValue={sp.q ?? ""} placeholder="Search name, company or email" className="u-max-width-340px" />
         <button className="btn ghost" type="submit">Search</button>
       </form>
       <div className="card">

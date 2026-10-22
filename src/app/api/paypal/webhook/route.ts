@@ -15,7 +15,10 @@ export async function POST(request: Request) {
   if(Number(request.headers.get("content-length") ?? 0)>262144)return NextResponse.json({error:"Payload too large"},{status:413});
   const raw = await request.text();
   if(raw.length>262144)return NextResponse.json({error:"Payload too large"},{status:413});
-  if (!(await paypal.verifyWebhook(request.headers, raw))) {
+  let verified = false;
+  try { verified = await paypal.verifyWebhook(request.headers, raw); }
+  catch { return NextResponse.json({error:"Verification unavailable; retry"},{status:503}); }
+  if (!verified) {
     return NextResponse.json({ error: "Signature check failed" }, { status: 400 });
   }
 

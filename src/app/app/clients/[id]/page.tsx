@@ -40,14 +40,14 @@ export default async function ClientPage({
       </div>
       <Banner error={sp.error} notice={sp.notice} />
 
-      <div className="card" style={{ maxWidth: 680 }}>
+      <div className="card u-max-width-680px" >
         <h2>Details</h2>
         <ClientForm action={updateClientAction.bind(null, id)} client={client} submitLabel="Save changes" />
       </div>
 
-      <div className="card" style={{ maxWidth: 680 }}>
+      <div className="card u-max-width-680px" >
         <h2>Notes</h2>
-        <form action={addNoteAction.bind(null, id)} style={{ marginBottom: 12 }}>
+        <form action={addNoteAction.bind(null, id)} className="u-margin-bottom-12px">
           <div className="field"><textarea name="body" placeholder="Call summary, preferences, next steps…" required maxLength={2000} /></div>
           <button className="btn dark small" type="submit">Add note</button>
         </form>
@@ -55,7 +55,7 @@ export default async function ClientPage({
           <p className="muted">No notes yet.</p>
         ) : (
           (notes.data ?? []).map((n) => (
-            <div key={n.id} style={{ borderTop: "1px solid var(--line)", padding: "10px 0", whiteSpace: "pre-wrap" }}>
+            <div key={n.id} className="u-border-top-1px-solid-var-line-padding-10px-0-white-space-pre-wrap">
               {n.body}
               <div className="muted small">{new Date(n.created_at).toLocaleString("en-US")}</div>
             </div>
@@ -63,10 +63,10 @@ export default async function ClientPage({
         )}
       </div>
 
-      <div className="card" style={{ maxWidth: 680 }}>
+      <div className="card u-max-width-680px" >
         <h2>Projects</h2>
         {(projects.data ?? []).length === 0 ? <p className="muted">No projects for this client.</p> : (
-          <ul style={{ paddingLeft: 18, margin: 0 }}>
+          <ul className="u-padding-left-18px-margin-0">
             {(projects.data ?? []).map((p) => (
               <li key={p.id}><Link href={`/app/projects/${p.id}`}>{p.name}</Link> <span className="pill">{p.status}</span></li>
             ))}
@@ -74,7 +74,7 @@ export default async function ClientPage({
         )}
       </div>
 
-      <div className="card" style={{ maxWidth: 680 }}>
+      <div className="card u-max-width-680px" >
         <h2>Invoices</h2>
         {(invoices.data ?? []).length === 0 ? <p className="muted">No invoices yet.</p> : (
           <table>

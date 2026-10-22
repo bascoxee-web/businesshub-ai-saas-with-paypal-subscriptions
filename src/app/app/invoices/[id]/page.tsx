@@ -56,20 +56,20 @@ export default async function InvoicePage({
       </div>
       <Banner error={sp.error} notice={sp.notice} />
 
-      <div className="card" style={{ maxWidth: 760 }}>
-        <div className="row between" style={{ alignItems: "flex-start" }}>
+      <div className="card u-max-width-760px" >
+        <div className="row between u-align-items-flex-start" >
           <div>
             <div className="muted small">Bill to</div>
             {client ? <Link href={`/app/clients/${client.id}`}><strong>{client.name}</strong></Link> : null}
             {client?.company ? <div>{client.company}</div> : null}
             {client?.email ? <div className="muted">{client.email}</div> : null}
           </div>
-          <div style={{ textAlign: "right" }}>
+          <div className="u-text-align-right">
             <div className="muted small">Issued</div><div>{inv.issue_date}</div>
-            <div className="muted small" style={{ marginTop: 6 }}>Due</div><div>{inv.due_date ?? "—"}</div>
+            <div className="muted small u-margin-top-6px" >Due</div><div>{inv.due_date ?? "—"}</div>
           </div>
         </div>
-        <table style={{ marginTop: 14 }}>
+        <table className="u-margin-top-14px">
           <thead><tr><th>Description</th><th className="num">Qty</th><th className="num">Unit price</th><th className="num">Amount</th></tr></thead>
           <tbody>
             {lines.map((l) => (
@@ -83,11 +83,11 @@ export default async function InvoicePage({
             <tr><td colSpan={3} className="num"><strong>Total</strong></td><td className="num"><strong>{formatMoney(total, inv.currency)}</strong></td></tr>
           </tbody>
         </table>
-        {inv.notes ? <p className="muted" style={{ whiteSpace: "pre-wrap" }}>{inv.notes}</p> : null}
+        {inv.notes ? <p className="muted u-white-space-pre-wrap" >{inv.notes}</p> : null}
       </div>
 
       {(payments ?? []).length > 0 && (
-        <div className="card" style={{ maxWidth: 760 }}>
+        <div className="card u-max-width-760px" >
           <h2>Payments received</h2>
           <table>
             <tbody>
@@ -102,7 +102,7 @@ export default async function InvoicePage({
             </tbody>
           </table>
           {(payments ?? []).length > 1 || status === "void" ? (
-            <p className="small" style={{ color: "var(--warn)", marginBottom: 0 }}>
+            <p className="small u-color-var-warn-margin-bottom-0" >
               This invoice has more than one payment, or was voided after being paid. Check PayPal and refund anything extra.
             </p>
           ) : null}
@@ -110,11 +110,11 @@ export default async function InvoicePage({
       )}
 
       {publicUrl && (
-        <div className="card" style={{ maxWidth: 760 }}>
+        <div className="card u-max-width-760px" >
           <h2>Share with your client</h2>
           <p className="muted small">Anyone with this link can view this invoice. Send it by email or message.</p>
           <input readOnly value={publicUrl} aria-label="Public invoice link" />
-          <p style={{ marginBottom: 0 }}><a className="btn ghost small" href={publicUrl} target="_blank" rel="noopener noreferrer">Open page</a></p>
+          <p className="u-margin-bottom-0"><a className="btn ghost small" href={publicUrl} target="_blank" rel="noopener noreferrer">Open page</a></p>
         </div>
       )}
 

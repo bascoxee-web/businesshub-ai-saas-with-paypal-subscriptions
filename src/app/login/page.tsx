@@ -1,4 +1,5 @@
 import Link from "next/link";
+import {Brand} from "@/components/Brand";
 import { login } from "@/lib/auth-actions";
 import { Banner } from "@/components/Banner";
 
@@ -8,11 +9,9 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const sp = await searchParams;
   return (
     <main className="auth">
-      <div className="brand" style={{ padding: 0, marginBottom: 14, fontSize: 22 }}>
-        BusinessHub<span style={{ color: "var(--accent)" }}> VisionAI</span>
-      </div>
+      <Brand />
       <div className="card">
-        <h1 style={{ fontSize: 22 }}>Sign in</h1>
+        <h1 className="u-font-size-22px">Sign in</h1>
         <Banner auth error={sp.error} notice={sp.notice} />
         <form action={login}>
           <div className="field">
@@ -23,7 +22,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             <label htmlFor="password">Password</label>
             <input id="password" name="password" type="password" autoComplete="current-password" required />
           </div>
-          <button className="btn" type="submit" style={{ width: "100%" }}>Sign in</button>
+          <button className="btn u-width-100" type="submit" >Sign in</button>
         </form>
       </div>
       <p className="muted small">

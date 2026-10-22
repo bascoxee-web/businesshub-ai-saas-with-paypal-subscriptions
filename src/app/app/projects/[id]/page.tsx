@@ -45,7 +45,7 @@ export default async function ProjectPage({
           </div>
         </div>
         <form action={setProjectStatusAction.bind(null, id)} className="row">
-          <select name="status" defaultValue={project.status} style={{ width: "auto" }} aria-label="Project status">
+          <select name="status" defaultValue={project.status} className="u-width-auto" aria-label="Project status">
             <option value="planned">Planned</option>
             <option value="active">Active</option>
             <option value="done">Done</option>
@@ -56,12 +56,12 @@ export default async function ProjectPage({
       <Banner error={sp.error} notice={sp.notice} />
 
       <div className="card">
-        <form action={addTaskAction.bind(null, id)} className="row" style={{ alignItems: "flex-end" }}>
-          <div style={{ flex: 1, minWidth: 220 }}>
+        <form action={addTaskAction.bind(null, id)} className="row u-align-items-flex-end" >
+          <div className="u-flex-1-min-width-220px">
             <label htmlFor="title">New task</label>
             <input id="title" name="title" required maxLength={200} />
           </div>
-          <div style={{ minWidth: 150 }}>
+          <div className="u-min-width-150px">
             <label htmlFor="due_date">Due</label>
             <input id="due_date" name="due_date" type="date" />
           </div>
@@ -79,7 +79,7 @@ export default async function ProjectPage({
                 <div className="task" key={t.id}>
                   <div>{t.title}</div>
                   {t.due_date && (
-                    <div className={`small ${t.status !== "done" && t.due_date < today ? "" : "muted"}`} style={t.status !== "done" && t.due_date < today ? { color: "var(--bad)" } : undefined}>
+                    <div className={`small ${t.status !== "done" && t.due_date < today ? "text-danger" : "muted"}`}>
                       due {t.due_date}
                     </div>
                   )}
@@ -101,7 +101,7 @@ export default async function ProjectPage({
         })}
       </div>
 
-      <form action={deleteProjectAction.bind(null, id)} style={{ marginTop: 24 }}>
+      <form action={deleteProjectAction.bind(null, id)} className="u-margin-top-24px">
         <button className="btn danger small" type="submit">Delete project and its tasks</button>
       </form>
     </>

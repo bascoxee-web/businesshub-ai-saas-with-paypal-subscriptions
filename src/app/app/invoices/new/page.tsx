@@ -27,9 +27,9 @@ export default async function NewInvoicePage({ searchParams }: { searchParams: P
     <>
       <h1>New invoice</h1>
       <Banner error={sp.error} />
-      <form action={createInvoiceAction} className="card" style={{ maxWidth: 760 }}>
-        <div className="row" style={{ alignItems: "flex-start" }}>
-          <div className="field" style={{ flex: 2, minWidth: 220 }}>
+      <form action={createInvoiceAction} className="card u-max-width-760px" >
+        <div className="row u-align-items-flex-start" >
+          <div className="field u-flex-2-min-width-220px" >
             <label htmlFor="client_id">Client</label>
             <select id="client_id" name="client_id" defaultValue={sp.client ?? ""} required>
               <option value="" disabled>Choose a client</option>
@@ -38,13 +38,13 @@ export default async function NewInvoicePage({ searchParams }: { searchParams: P
               ))}
             </select>
           </div>
-          <div className="field" style={{ flex: 1, minWidth: 150 }}>
+          <div className="field u-flex-1-min-width-150px" >
             <label htmlFor="due_date">Due date</label>
             <input id="due_date" name="due_date" type="date" />
           </div>
         </div>
         <LineItemsEditor currency={ws.currency} />
-        <div className="field" style={{ marginTop: 14 }}>
+        <div className="field u-margin-top-14px" >
           <label htmlFor="notes">Notes (shown on the invoice)</label>
           <textarea id="notes" name="notes" maxLength={1000} placeholder="Payment instructions, thank-you note…" />
         </div>
